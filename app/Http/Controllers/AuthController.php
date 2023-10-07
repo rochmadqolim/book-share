@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -12,11 +13,36 @@ class AuthController extends Controller
 
         return view('login');
     }
+
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('login');
+    }
+
     public function register(Request $request){
 
         return view('register');
     }
-public function authen(Request $request){
+
+    public function registerPost(Request $request){
+
+        $request->validate([
+            'username' =>'required|unique:users',
+            'password' =>'required',
+            'phone' =>'required',
+            'address' =>'required',
+        ]);
+
+       User::create($request->all());
+
+       Session::flash('status', 'success');
+       Session::flash('message','register succes, please wait admin for approval');
+       return redirect('register');
+    }
+
+    public function authen(Request $request){
 
     $credentials = $request->validate([
         'username' => ['required'],
@@ -25,11 +51,17 @@ public function authen(Request $request){
 
     if (Auth::attempt($credentials)) {
         if (Auth::user()->status != 'active') {
+
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
             Session::flash('status', 'failed');
             Session::flash('message', 'Your account is not active');
             return redirect('/login');
         }
 
+        $request->session()->regenerate();
         if (Auth::user()->role_id == 1){
             return redirect('dashboard');
         }
@@ -42,7 +74,7 @@ public function authen(Request $request){
         Session::flash('message', 'Login failed. Invalid username or password');
         return redirect('/login');
     }
-}
+    }
 
     
     

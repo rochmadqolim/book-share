@@ -47,7 +47,7 @@
                     <button type="submit" class="btn btn-primary form-control">Login</button>
                 </div>
                 <div class="text-center">
-                    <a href="register">Register</a>
+                    Do you haven't any account?<a href="register">Register</a>
                 </div>
             </form>
         </div>
