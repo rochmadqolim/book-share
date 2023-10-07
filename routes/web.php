@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +32,10 @@ Route::middleware('guest_only')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('logout',[AuthController::class, 'logout']);
-    Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth','admin']);
-    Route::get('profile', [UserController::class, 'profile'])->middleware(['auth', 'client']);
-    Route::get('books', [BookController::class, 'index'])->middleware('auth');
+    Route::get('dashboard', [DashboardController::class, 'index'])->middleware('admin');
+    Route::get('profile', [UserController::class, 'profile'])->middleware('client');
+    Route::get('books', [BookController::class, 'index']);
+    Route::get('categories', [CategoryController::class, 'index']);
+    Route::get('users', [UserController::class, 'index']);
+    Route::get('logs', [LogController::class, 'index']);
 });
