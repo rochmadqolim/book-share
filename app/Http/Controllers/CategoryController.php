@@ -26,4 +26,22 @@ class CategoryController extends Controller
         Category::create($request->all());
         return redirect('categories')->with('status','Add New Category Successfully');
     }
+
+    public function edit($slug){
+        $category = Category::where('slug', $slug)->first();
+        return view('categoryEdit', ['category'=>$category]);
+    }
+
+    public function update(Request $request, $slug){
+
+        $request->validate([
+            'name' => 'required|unique:categories'
+        ]);
+
+        $category = Category::where('slug', $slug)->first();
+        $category->slug =null;
+        $category->update($request->all());
+        return redirect('categories')->with('status','Category Updated Successfully');
+        
+    }
 }
