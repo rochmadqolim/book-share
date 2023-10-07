@@ -9,6 +9,14 @@
     <a href="categoryAdd" class="btn btn-primary">Add Category</a>
 </div>
 
+<div class="mt-5 text-center">
+    @if (session('status'))
+    <div class="alert alert-success">
+        {{session('status')}}
+    </div>
+    @endif
+</div>
+
 <div class="my-5">
     <table class="table">
         <thead>
