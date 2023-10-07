@@ -35,7 +35,11 @@ Route::middleware('auth')->group(function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->middleware('admin');
     Route::get('profile', [UserController::class, 'profile'])->middleware('client');
     Route::get('books', [BookController::class, 'index']);
+    
     Route::get('categories', [CategoryController::class, 'index']);
+    Route::get('categoryAdd', [CategoryController::class, 'add']);
+    Route::post('categoryAdd', [CategoryController::class, 'store']);
+    
     Route::get('users', [UserController::class, 'index']);
     Route::get('logs', [LogController::class, 'index']);
 });
