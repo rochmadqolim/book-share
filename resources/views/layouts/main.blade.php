@@ -33,7 +33,11 @@
                     @if(Auth::user()->role_id == 1)
                     <a href="dashboard" @if(request()->route()->uri=='dashboard') class="active" @endif>Dashboard</a>
                     <a href="books" @if(request()->route()->uri=='books') class="active" @endif>Books</a>
-                    <a href="categories" @if(request()->route()->uri=='categories') class="active" @endif>Categories</a>
+                    <a href="categories"
+                        @if(request()->route()->uri=='categories'||request()->route()->uri=='categoryEdit/{slug}'||request()->route()->uri=='categoryDelete/{slug}'
+                        ||request()->route()->uri=='categoryAdd'
+                        ||request()->route()->uri=='categoryRestore')
+                        class="active" @endif>Categories</a>
                     <a href="users" @if(request()->route()->uri=='users') class="active" @endif>Users</a>
                     <a href="logs" @if(request()->route()->uri=='logs') class="active" @endif>Logs</a>
                     <a href="logout">Logout</a>
