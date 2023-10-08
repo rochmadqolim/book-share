@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LogController;
+use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,9 @@ Route::middleware('auth')->group(function(){
     Route::post('categoryAdd', [CategoryController::class, 'store']);
     Route::get('categoryEdit/{slug}', [CategoryController::class, 'edit']);
     Route::put('categoryEdit/{slug}', [CategoryController::class, 'update']);
+    Route::get('categoryDelete/{slug}', [CategoryController::class, 'delete']);
+    Route::get('categoryDestroy/{slug}', [CategoryController::class, 'destroy']);
+    Route::get('categoryRestore',[CategoryController::class, 'deletedCategory']);
     
     Route::get('users', [UserController::class, 'index']);
     Route::get('logs', [LogController::class, 'index']);
