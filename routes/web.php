@@ -35,7 +35,12 @@ Route::middleware('auth')->group(function(){
     Route::get('logout',[AuthController::class, 'logout']);
     Route::get('dashboard', [DashboardController::class, 'index'])->middleware('admin');
     Route::get('profile', [UserController::class, 'profile'])->middleware('client');
+    
     Route::get('books', [BookController::class, 'index']);
+    Route::get('bookAdd', [BookController::class, 'add']);
+    Route::post('bookAdd', [BookController::class, 'create']);
+    Route::get('bookEdit/{slug}', [BookController::class, 'edit']);
+    Route::post('bookEdit/{slug}', [BookController::class, 'update']);
     
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categoryAdd', [CategoryController::class, 'add']);
