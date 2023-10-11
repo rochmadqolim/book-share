@@ -6,7 +6,7 @@
 <h1>BOOK LIST</h1>
 <div class="mt-5 d-flex justify-content-end">
     <a href="bookAdd" class="btn btn-primary me-3">Add Book</a>
-    <a href="#" class="btn btn-secondary">Restore Book</a>
+    <a href="bookRestore" class="btn btn-secondary">Restore Book</a>
 </div>
 
 <div class="mt-5 text-center">

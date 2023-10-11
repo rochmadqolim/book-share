@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function(){
     Route::post('bookEdit/{slug}', [BookController::class, 'update']);
     Route::get('bookDelete/{slug}', [BookController::class, 'delete']);
     Route::get('bookDestroy/{slug}', [BookController::class, 'destroy']);
+    Route::get('bookRestore',[BookController::class, 'deletedBook']);
+    Route::get('bookRestored/{slug}',[BookController::class, 'restore']);
 
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categoryAdd', [CategoryController::class, 'add']);
