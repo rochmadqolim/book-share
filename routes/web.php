@@ -60,6 +60,10 @@ Route::middleware('auth')->group(function(){
     Route::get('unregistered', [UserController::class, 'registeredUser']);
     Route::get('user/{slug}', [UserController::class, 'detail']);
     Route::get('userApproved/{slug}', [UserController::class, 'approved']);
+    Route::get('userBan/{slug}', [UserController::class, 'delete']);
+    Route::get('userBanned/{slug}', [UserController::class, 'destroy']);
+    Route::get('bannedList', [UserController::class, 'banned']);
+    Route::get('userRestore/{slug}', [UserController::class, 'restore']);
 
     Route::get('logs', [LogController::class, 'index']);
 });

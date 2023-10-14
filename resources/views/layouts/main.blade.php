@@ -40,7 +40,7 @@
                         ||request()->route()->uri=='categoryAdd'
                         ||request()->route()->uri=='categoryRestore')
                         class="active" @endif>Categories</a>
-                    <a href="/users" @if(request()->route()->uri=='users'||request()->route()->uri=='unregistered'||request()->route()->uri=='user/{slug}') class="active" @endif>Users</a>
+                    <a href="/users" @if(request()->route()->uri=='users'||request()->route()->uri=='unregistered'||request()->route()->uri=='user/{slug}'||request()->route()->uri=='userBan/{slug}' ||request()->route()->uri=='bannedList') class="active" @endif>Users</a>
                     <a href="/logs" @if(request()->route()->uri=='logs') class="active" @endif>Logs</a>
                     <a href="/logout">Logout</a>
                     @else
