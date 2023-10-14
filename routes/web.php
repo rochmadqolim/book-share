@@ -57,5 +57,9 @@ Route::middleware('auth')->group(function(){
     Route::get('categoryRestored/{slug}',[CategoryController::class, 'restore']);
     
     Route::get('users', [UserController::class, 'index']);
+    Route::get('unregistered', [UserController::class, 'registeredUser']);
+    Route::get('user/{slug}', [UserController::class, 'detail']);
+    Route::get('userApproved/{slug}', [UserController::class, 'approved']);
+
     Route::get('logs', [LogController::class, 'index']);
 });
