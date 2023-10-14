@@ -34,7 +34,9 @@
             @foreach($books as $item)
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td>{{$item->cover}}</td>
+                <td>
+                    <img src="{{ $item->cover != null ? asset('storage/cover/'.$item->cover) : asset('images/blank.jpg') }}" class="img-thumbnail" >
+                </td>
                 <td>{{$item->book_code}}</td>
                 <td>{{$item->title}}</td>
                 <td>
