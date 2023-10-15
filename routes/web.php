@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookRentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\PublicController;
@@ -66,6 +67,9 @@ Route::middleware('auth')->group(function(){
         Route::get('bannedList', [UserController::class, 'banned']);
         Route::get('userRestore/{slug}', [UserController::class, 'restore']);
         
+        Route::get('bookRent',[BookRentController::class,'index']);
+        Route::post('bookRent',[BookRentController::class,'store']);
+
         Route::get('logs', [LogController::class, 'index']);
     });
 });
