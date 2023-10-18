@@ -44,7 +44,7 @@
                         <li>{{ $category->name }}</li>
                     @endforeach
                 </td>
-                <td>{{$item->status}}</td>
+                <td class="fw-bold {{ $item->status == 'in stock'? 'text-success': 'text-danger' }}" >{{$item->status}}</td>
                 <td>
                     <a href="/bookEdit/{{ $item->slug }}">Edit</a>
                     <a href="/bookDelete/{{ $item->slug }}">Delete</a>
