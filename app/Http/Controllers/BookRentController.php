@@ -14,7 +14,7 @@ class BookRentController extends Controller
 {
     public function index(){
 
-        $users = User::where('id','!=',1)->get();
+        $users = User::where('id','!=',1)->where('status', '!=', 'in active')->get();
         $books = Book::all();
         return view('bookRent',['users'=>$users, 'books'=> $books]);
     }
@@ -55,4 +55,49 @@ class BookRentController extends Controller
         }        
 
     }
-}
+
+    public function return(){
+        $users = User::where('id','!=',1)->where('status', '!=', 'in active')->get();
+        $books = Book::all();
+        return view('bookReturn',['users'=>$users, 'books'=> $books]);
+    
+    }
+
+    public function returnPost(Request $request) {
+        try {
+            // Mencari data peminjaman buku
+            $rentData = RentLogs::where('user_id', $request->user_id)
+                ->where('book_id', $request->book_id)
+                ->where('actual_date', null)
+                ->first();
+    
+            if (!$rentData) {
+                Session::flash('message', 'Error: Book not found or already returned.');
+                Session::flash('alert-class', 'alert-danger');
+                return redirect('bookReturn');
+            }
+    
+            DB::beginTransaction();
+    
+            // Menyimpan data pengembalian
+            $rentData->actual_date = Carbon::now()->toDateString();
+            $rentData->save();
+    
+            // Mengubah status buku menjadi "in stock"
+            $book = Book::findOrFail($request->book_id);
+            $book->status = 'in stock';
+            $book->save();
+    
+            DB::commit();
+    
+            Session::flash('message', 'Book Returned Successfully');
+            Session::flash('alert-class', 'alert-success');
+            return redirect('bookReturn');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Session::flash('message', 'Error: An unexpected error occurred.');
+            Session::flash('alert-class', 'alert-danger');
+            return redirect('bookReturn');
+        }
+    }
+}    
