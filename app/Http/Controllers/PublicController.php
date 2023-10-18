@@ -10,17 +10,21 @@ class PublicController extends Controller
 {
     public function index(Request $request){
         $categories = Category::all();
-
+        
         $books = Book::when($request->category, function ($query) use ($request) {
             $query->whereHas('categories', function ($q) use ($request) {
                 $q->where('categories.id', $request->category);
             });
         })
         ->when($request->title, function ($query) use ($request) {
-            $query->where('title', 'like', '%' . $request->title . '%');
+            
+                $query->orWhere('title', 'like', '%' . $request->title . '%');
+                
+            
         })
         ->get();
-        
-        return view('bookList', ['books'=>$books, 'categories'=>$categories]);
+    
+    return view('bookList', ['books' => $books, 'categories' => $categories]);
     }
+
 }

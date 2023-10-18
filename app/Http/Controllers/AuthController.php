@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
-    public function login(Request $request){
+    public function login(){
 
         return view('login');
     }
@@ -18,10 +18,10 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('login');
+        return redirect('/');
     }
 
-    public function register(Request $request){
+    public function register(){
 
         return view('register');
     }
@@ -75,9 +75,5 @@ class AuthController extends Controller
         return redirect('/login');
     }
     }
-
-    
-    
-
 
 }
