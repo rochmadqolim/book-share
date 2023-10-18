@@ -6,20 +6,24 @@
 
 <form action="" method="GET">
     <div class="row">
-        <div class="card-body">
+
+        {{-- <div class="card-body">
             @foreach ($categories as $item)
             <label class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" name="category" id="category" value="{{ $item->id }}">
                 <span class="custom-control-label">{{ $item->name }}</span>
             </label>
             @endforeach
+        </div> --}}
 
-            {{-- @foreach ($categories as $item) --}}
-            {{-- <select name="category" id="category" class="form-control"> --}}
-                {{-- <option value="">Select Category</option> --}}
-                    {{-- <option value="{{ $item->id }}">{{ $item->name }}</option> --}}
-                {{-- </select> --}}
-            {{-- @endforeach --}}
+
+        <div class="col-12 col-sm-6">
+            <select name="category" id="category" class="form-control">
+                @foreach ($categories as $item)
+                <option value="">Select Category</option>
+                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                </select>
         </div>
         <div class="col-12 col-sm-6">
             <div class="input-group mb-3">
