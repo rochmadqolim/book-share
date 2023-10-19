@@ -6,7 +6,7 @@
 <h1>BOOK LIST</h1>
 <div class="mt-5 d-flex justify-content-end">
     <a href="bookAdd" class="btn btn-primary me-3">Add Book</a>
-    <a href="bookRestore" class="btn btn-secondary">Restore Book</a>
+    <a href="bookRestore" class="btn btn-secondary">Deleted List</a>
 </div>
 
 <div class="mt-5 text-center">
@@ -30,9 +30,9 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody >
             @foreach($books as $item)
-            <tr>
+            <tr >
                 <td>{{$loop->iteration}}</td>
                 <td>
                     <img src="{{ $item->cover != null ? asset('storage/cover/'.$item->cover) : asset('images/blank.jpg') }}" class="img-thumbnail" >
@@ -46,7 +46,7 @@
                 </td>
                 <td class="fw-bold {{ $item->status == 'in stock'? 'text-success': 'text-danger' }}" >{{$item->status}}</td>
                 <td>
-                    <a href="/bookEdit/{{ $item->slug }}">Edit</a>
+                    <a href="/bookUpdate/{{ $item->slug }}">Update</a>
                     <a href="/bookDelete/{{ $item->slug }}">Delete</a>
                 </td>
             </tr>

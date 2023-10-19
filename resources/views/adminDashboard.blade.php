@@ -41,26 +41,29 @@
     </div>
 </div>
 
-<div>
-    <h2>Rent Log</h2>
+<div class="mt-5">
     <table class="table">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>User</th>
-                <th>Book Title</th>
-                <th>Rent Date</th>
-                <th>Return Date</th>
-                <th>Actual Date</th>
-                <th>status</th>
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>User</th>
+            <th>Book</th>
+            <th>Actual Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($rent_logs as $item)
+            <tr class="{{ $item->actual_date == null ? '' : ($item->return_date < $item->actual_date ? 'text-bg-danger' : 'text-bg-success') }}">
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $item->user->username }}</td>
+                <td>{{ $item->book->title }}</td>
+                <td>{{ $item->actual_date }}</td>
+                <td>{{ $item->status }}</td>
             </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="7" style="text-align: center;">No Data</td>
-            </tr>
-        </tbody>
+        @endforeach
+    </tbody>
     </table>
-</div>
+    </div>
 
 @endsection

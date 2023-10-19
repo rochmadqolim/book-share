@@ -33,22 +33,22 @@
                 @if(Auth::user())
                     @if(Auth::user()->role_id == 1)
                     <a href="/dashboard" @if(request()->route()->uri=='dashboard') class="active" @endif>Dashboard</a>
-                    <a href="/books" @if(request()->route()->uri=='books' ||request()->route()->uri=='bookEdit/{slug}'||request()->route()->uri=='bookDelete/{slug}'
+                    <a href="/userList" @if(request()->route()->uri=='userUnActivated'||request()->route()->uri=='userList'||request()->route()->uri=='user/{slug}'||request()->route()->uri=='userBann/{slug}' ||request()->route()->uri=='bannedList') class="active" @endif>User List</a>
+                    <a href="/bookList" @if(request()->route()->uri=='bookList' ||request()->route()->uri=='bookEdit/{slug}'||request()->route()->uri=='bookDelete/{slug}'
                         ||request()->route()->uri=='bookAdd'
-                        ||request()->route()->uri=='bookRestore') class="active" @endif>Books</a>
-                    <a href="/categories"
-                        @if(request()->route()->uri=='categories'||request()->route()->uri=='categoryEdit/{slug}'||request()->route()->uri=='categoryDelete/{slug}'
+                        ||request()->route()->uri=='bookRestore') class="active" @endif>Book List</a>
+                    <a href="/rentList"@if(request()->route()->uri=='rentList') class="active" @endif>Rent List</a>
+                    <a href="/bookRent"@if(request()->route()->uri=='bookRent') class="active" @endif>Book Rent</a>
+                    <a href="/categoryList"
+                        @if(request()->route()->uri=='categoryList'||request()->route()->uri=='categoryEdit/{slug}'||request()->route()->uri=='categoryDelete/{slug}'
                         ||request()->route()->uri=='categoryAdd'
                         ||request()->route()->uri=='categoryRestore')
-                        class="active" @endif>Categories</a>
-                    <a href="/users" @if(request()->route()->uri=='users'||request()->route()->uri=='unregistered'||request()->route()->uri=='user/{slug}'||request()->route()->uri=='userBan/{slug}' ||request()->route()->uri=='bannedList') class="active" @endif>Users</a>
-                    <a href="/bookRent"@if(request()->route()->uri=='bookRent') class="active" @endif>Book Rent</a>
-                    <a href="/bookReturn"@if(request()->route()->uri=='bookReturn') class="active" @endif>Book Return</a>
-                    <a href="/logs" @if(request()->route()->uri=='logs') class="active" @endif>Logs</a>
+                        class="active" @endif>Category List</a>
                     <a href="/logout">Logout</a>
                     @else
-                    <a href="/" @if(request()->route()->uri=='/') class="active" @endif>Book List</a>
-                    <a href="/profile" @if(request()->route()->uri=='profile') class="active" @endif>Profile</a>
+                    <a href="/" @if(request()->route()->uri=='/') class="active" @endif>Book Card</a>
+                    <a href="/userRent"@if(request()->route()->uri=='userRent') class="active" @endif>Rent</a>
+                    <a href="/userHistory" @if(request()->route()->uri=='userHistory') class="active" @endif>History</a>
                     <a href="/logout">Logout</a>
                     @endif
                     @else

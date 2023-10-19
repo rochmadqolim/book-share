@@ -5,8 +5,9 @@
 @section('content')
 <h1>LAMAN USER</h1>
 <div class="mt-5 d-flex justify-content-end">
-    <a href="/unregistered" class="btn btn-primary me-3">Waiting Approval</a>
-    <a href="/bannedList" class="btn btn-secondary">View Banned</a>
+    <a href="/userAdd" class="btn btn-primary me-3">Added User</a>
+    <a href="/unActivatedList" class="btn btn-primary me-3">Activated User</a>
+    <a href="/bannedList" class="btn btn-secondary">Banned List</a>
 </div>
 
 <div class="mt-5 text-center">
@@ -33,16 +34,10 @@
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td>{{$item->username}}</td>
+                <td>{{ $item->phone }}</td>
                 <td>
-                    @if ($item->phone)
-                        {{ $item->phone }}
-                    @else
-                        -
-                    @endif
-                </td>
-                <td>
-                    <a href="/user/{{ $item->slug }}">Detail</a>
-                    <a href="/userBan/{{ $item->slug }}">Banned</a>
+                    <a class="btn btn-primary" href="/user/{{ $item->slug }}">Detail</a>
+                    <a class="btn btn-danger" href="/userBann/{{ $item->slug }}">Delete</a>
                 </td>
             </tr>
             @endforeach

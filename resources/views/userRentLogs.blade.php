@@ -1,8 +1,9 @@
 @extends('layouts.main')
 
-@section('title', 'Profile')
+@section('title', 'User History Rent')
 
 @section('content')
+<h1>History Rent </h1>
 <div class="mt-5">
     <table class="table">
     <thead>
@@ -12,7 +13,6 @@
             <th>Book</th>
             <th>Rent Date</th>
             <th>Return Date</th>
-            <th>Actual Date</th>
         </tr>
     </thead>
     <tbody>
@@ -23,7 +23,6 @@
                 <td>{{ $item->book->title }}</td>
                 <td>{{ $item->rent_date }}</td>
                 <td>{{ $item->return_date }}</td>
-                <td>{{ $item->actual_date }}</td>
             </tr>
         @endforeach
     </tbody>

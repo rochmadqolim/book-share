@@ -3,7 +3,7 @@
 @section('title', 'Add Category')
 
 @section('content')
-<h1>Category Edit</h1>
+<h1>Category Update</h1>
 
 <div class="mt-5 w-50">
 
@@ -17,7 +17,7 @@
     </div>
     @endif
 
-    <form action="/categoryEdit/{{$category->slug}}" method="post">
+    <form action="/categoryUpdate/{{$category->slug}}" method="post">
         @csrf
         @method('put')
         <div>

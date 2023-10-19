@@ -1,12 +1,12 @@
 @extends('layouts.main')
 
-@section('title', 'Dashboard')
+@section('title', 'User Rent')
 
 @section('content')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 <div class="col-12 col-md-8 offset-md-3 col-lg-6">
-    <h1 class="mb-5">Book Rent Form</h1>
+    <h1 class="mb-5">User Rent Form</h1>
 
     <div class="mt-5 text-center">
         @if (session('message'))
@@ -16,15 +16,12 @@
         @endif
     </div>
 
-    <form action="bookRent" method="post">
+    <form action="userRent" method="post">
         @csrf
         <div class="mb-3">
             <label for="user" class="form-label">User</label>
-            <select name="user_id" id="user" class="form-control inputbox">
-                <option value="">Select User</option>
-                @foreach ($users as $item)
-                <option value="{{ $item->id }}">{{ $item->username }}</option>
-                @endforeach
+            <select name="user_id" id="user" class="form-control">
+                <option value="{{ $users->id }}">{{ $users->username }}</option>
             </select>
         </div>
         <div class="mb-3">
