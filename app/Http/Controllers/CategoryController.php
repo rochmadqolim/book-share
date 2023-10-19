@@ -7,32 +7,32 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index(){
+    public function categoryList(){
 
         $categories = Category::all();
-        return view('category',['categories' =>$categories]);
+        return view('adminCategoryList',['categories' =>$categories]);
     }
 
-    public function add(){
-        return view('categoryAdd');
+    public function categoryAdd(){
+        return view('adminCategoryAdd');
     }
     
-    public function store(Request $request){
+    public function categoryAdded(Request $request){
         
         $request->validate([
             'name' => 'required|unique:categories'
         ]);
         
         Category::create($request->all());
-        return redirect('categories')->with('status','Add New Category Successfully');
+        return redirect('categoryList')->with('status','Add New Category Successfully');
     }
 
-    public function edit($slug){
+    public function categoryUpdate($slug){
         $category = Category::where('slug', $slug)->first();
-        return view('categoryEdit', ['category'=>$category]);
+        return view('adminCategoryUpdate', ['category'=>$category]);
     }
 
-    public function update(Request $request, $slug){
+    public function categoryUpdated(Request $request, $slug){
 
         $request->validate([
             'name' => 'required|unique:categories'
@@ -41,31 +41,26 @@ class CategoryController extends Controller
         $category = Category::where('slug', $slug)->first();
         $category->slug =null;
         $category->update($request->all());
-        return redirect('categories')->with('status','Category Updated Successfully');
+        return redirect('categoryList')->with('status','Category Updated Successfully');
         
     }
 
-    public function delete($slug){
-        $category = Category::where('slug', $slug)->first();
-        return view('categoryDelete', ['category'=>$category]);
-    }
-
-    public function destroy($slug){
+    public function categoryDeleted($slug){
         $category =Category::where('slug',$slug)->first();
         $category->delete();
-        return redirect('categories')->with('status', "category Deleted Successfully");
+        return redirect('categoryList')->with('status', "category Deleted Successfully");
     }
 
-    public function deletedCategory(){
+    public function listCategoryDeleted(){
 
         $deletedList = Category::onlyTrashed()->get();
-        return view('categoryRestoreList', ['deletedCategories' => $deletedList]);
+        return view('adminCategoryRestoreList', ['deletedCategories' => $deletedList]);
         
     }
 
-    public function restore($slug){
+    public function restored($slug){
         $category = Category::withTrashed()->where('slug', $slug)->first();
         $category->restore();
-        return redirect('categories')->with('status','Category Restored Successfully');
+        return redirect('categoryList')->with('status','Category Restored Successfully');
     }
 }

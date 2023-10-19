@@ -24,7 +24,7 @@ class PublicController extends Controller
         })
         ->get();
     
-    return view('bookList', ['books' => $books, 'categories' => $categories]);
+    return view('layouts.publicView', ['books' => $books, 'categories' => $categories]);
     }
 
 }

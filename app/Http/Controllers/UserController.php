@@ -2,62 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use App\Models\RentLogs;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
-    public function profile(){
+    public function rent(){
 
-        $rentlogs = RentLogs::with(['user', 'book'])->where('user_id', Auth::user()->id)->get();
-        return view('profile', ['rent_logs' => $rentlogs]);
-    }
-
-    public function index(){
-        $users = User::where('role_id',2)->where('status', 'active')->get();
-        return view('user',['users'=>$users]);
-    }
-
-    public function registeredUser(){
-        $users = User::where('status', 'inactive')->where('role_id', 2)->get();
-        return view('unregistered',['users'=>$users]);
-    }
-
-    public function detail($slug){
-        $user = User::where('slug',$slug)->first();
-        return view('userDetail', ['user'=>$user]);
-    }
-  
-    public function approved($slug){
-        $user = User::where('slug', $slug)->first();
-        $user->status = 'active';
-        $user->save();
+        $users = Auth::user();
         
-        return redirect('user/'.$slug)->with('status','User Approved Successfully');
+        $books = Book::where('status','!=','not available')->get();
+        return view('userRentBook',['users'=>$users, 'books'=> $books]);
     }
 
-    public function delete($slug){
-        $user = User::where('slug', $slug)->first();
-        return view('userBan',['user'=>$user]);
+    public function userRent(Request $request){
+        
+        $request['rent_date'] = Carbon::now()->toDateString();
+        $request['return_date'] = Carbon::now()->addDay(3)->toDateString();
+        $book = Book::findOrFail($request->book_id)->only('status');
+        
+        if($book['status'] != 'in stock'){
+            Session::flash('message', 'Buku tidak tersedia dan sedang dipinjam');
+            Session::flash('alert-class','alert-danger');
+            return redirect('userRent');
+        } else {
+            $count =RentLogs::where('user_id', $request->user_id)->where('actual_date', null)->count();
+
+            if($count >= 3){
+                Session::flash('message', 'Sudah mencapai limit peminjaman buku');
+                Session::flash('alert-class','alert-danger');
+                return redirect('userRent');
+            }
+
+            try {
+                DB::beginTransaction();
+                RentLogs::create($request->all());
+                $book = Book::findOrFail($request->book_id);
+                $book->status = 'not available';
+                $book->save();
+                DB::commit();
+
+                Session::flash('message', 'Rent Book Succes!');
+                Session::flash('alert-class','alert-success');
+                return redirect('userRent');   
+            } catch (\Throwable $th) {
+                DB::rollBack();
+            }
+        }        
+
     }
 
-    public function destroy($slug){
-        $user = User::where('slug', $slug)->first();
-        $user->delete();
-        return redirect('users')->with('status','User Deleted Successfully');
+    public function history(){    
+    $rentLogs = RentLogs::with(['user','book'])->get();
+    return view('userRentLogs', ['rent_logs' => $rentLogs]);
     }
 
-    public function banned() {
-        $usersbanned = User::onlyTrashed()->get();
-        return view('userDeleted', ['usersbanned' => $usersbanned]);
-    }
-
-    public function restore($slug){
-        $user = User::withTrashed()->where('slug', $slug)->first();
-        $user->restore();
-
-        return redirect('users')->with('status','User Restored Successfully');
-    }
 }

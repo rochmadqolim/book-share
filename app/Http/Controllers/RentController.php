@@ -6,20 +6,30 @@ use App\Models\Book;
 use App\Models\RentLogs;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-class BookRentController extends Controller
+class RentController extends Controller
 {
-    public function index(){
-
-        $users = User::where('id','!=',1)->where('status', '!=', 'in active')->get();
-        $books = Book::all();
-        return view('bookRent',['users'=>$users, 'books'=> $books]);
+    public function rentList(){
+        
+        $rentLogs = RentLogs::with(['user','book'])->where('actual_date', null)->get();
+        return view('adminRentList',['rent_logs' => $rentLogs]);
     }
 
-    public function store(Request $request){
+    public function bookRentForm(){
+
+        $users = User::where('id','!=',1)->where('status', '!=', 'in active')->get();
+        
+        $books = Book::where('status','!=','not available')->get();
+        return view('adminBookRent',['users'=>$users, 'books'=> $books]);
+    }
+
+    public function bookRent(Request $request){
+        
         $request['rent_date'] = Carbon::now()->toDateString();
         $request['return_date'] = Carbon::now()->addDay(3)->toDateString();
 
@@ -31,13 +41,13 @@ class BookRentController extends Controller
             return redirect('bookRent');
         } else {
             $count =RentLogs::where('user_id', $request->user_id)->where('actual_date', null)->count();
-
+            
             if($count >= 3){
                 Session::flash('message', 'User sudah mencapai limit peminjaman buku');
                 Session::flash('alert-class','alert-danger');
                 return redirect('bookRent');
             }
-
+            
             try {
                 DB::beginTransaction();
                 RentLogs::create($request->all());
@@ -45,7 +55,7 @@ class BookRentController extends Controller
                 $book->status = 'not available';
                 $book->save();
                 DB::commit();
-
+                
                 Session::flash('message', 'Rent Book Succes!');
                 Session::flash('alert-class','alert-success');
                 return redirect('bookRent');   
@@ -53,51 +63,50 @@ class BookRentController extends Controller
                 DB::rollBack();
             }
         }        
-
+        
     }
-
-    public function return(){
-        $users = User::where('id','!=',1)->where('status', '!=', 'in active')->get();
-        $books = Book::all();
-        return view('bookReturn',['users'=>$users, 'books'=> $books]);
     
-    }
-
-    public function returnPost(Request $request) {
+    
+    
+    public function bookReturn(Request $request) {
+        $user_id = $request->input('user_id');
+        $book_id = $request->input('book_id');
+        
         try {
-            // Mencari data peminjaman buku
-            $rentData = RentLogs::where('user_id', $request->user_id)
-                ->where('book_id', $request->book_id)
-                ->where('actual_date', null)
-                ->first();
-    
-            if (!$rentData) {
-                Session::flash('message', 'Error: Book not found or already returned.');
-                Session::flash('alert-class', 'alert-danger');
-                return redirect('bookReturn');
-            }
-    
             DB::beginTransaction();
     
-            // Menyimpan data pengembalian
+            $rentData = RentLogs::where('user_id', $user_id)
+                ->where('book_id', $book_id)
+                ->firstOrFail();
+    
             $rentData->actual_date = Carbon::now()->toDateString();
             $rentData->save();
+            
     
-            // Mengubah status buku menjadi "in stock"
-            $book = Book::findOrFail($request->book_id);
+            $book = Book::findOrFail($book_id);
             $book->status = 'in stock';
             $book->save();
+
+            $rentData->status = 'Returned';
+        $rentData->save();
     
             DB::commit();
     
             Session::flash('message', 'Book Returned Successfully');
             Session::flash('alert-class', 'alert-success');
-            return redirect('bookReturn');
-        } catch (\Throwable $th) {
+            return redirect('rentList');
+        } catch (ModelNotFoundException $ex) {
+            DB::rollBack();
+            Session::flash('message', 'Error: Book not found or user has not borrowed this book.');
+            Session::flash('alert-class', 'alert-danger');
+            return redirect('rentList');
+        } catch (\Exception $ex) {
             DB::rollBack();
             Session::flash('message', 'Error: An unexpected error occurred.');
             Session::flash('alert-class', 'alert-danger');
-            return redirect('bookReturn');
+            return redirect('rentList');
         }
     }
-}    
+
+
+}

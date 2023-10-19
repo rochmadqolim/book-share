@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function login(){
 
-        return view('login');
+        return view('layouts.login');
     }
 
     public function logout(Request $request){
@@ -23,7 +23,7 @@ class AuthController extends Controller
 
     public function register(){
 
-        return view('register');
+        return view('layouts.register');
     }
 
     public function registerPost(Request $request){
@@ -67,7 +67,7 @@ class AuthController extends Controller
         }
 
         if (Auth::user()->role_id == 2){
-            return redirect('profile');
+            return redirect('/');
         }
     } else {
         Session::flash('status', 'failed');
