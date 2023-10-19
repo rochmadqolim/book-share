@@ -20,6 +20,8 @@ return new class extends Migration
             $table->date('rent_date');
             $table->date('return_date');
             $table->date('actual_date')->nullable();
+            $table->string('status')->default('Borrowed');
+
             $table->timestamps();
         });
     }
