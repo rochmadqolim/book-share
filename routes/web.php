@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -9,7 +10,10 @@ use App\Http\Controllers\BookRentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\RentController;
+use App\Http\Controllers\UserBookController;
 use App\Models\Category;
+use App\Models\RentLogs;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,46 +36,49 @@ Route::middleware('guest_only')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    Route::get('userRent',[UserController::class,'rent']);
+    Route::post('userRent',[UserController::class,'userRent']);
+    Route::get('userHistory', [UserController::class, 'history']);
     Route::get('logout',[AuthController::class, 'logout']);
-    Route::get('profile', [UserController::class, 'profile'])->middleware('client');
     
     Route::middleware('admin')->group(function(){
-        Route::get('dashboard', [DashboardController::class, 'index']);
+        Route::get('dashboard', [AdminController::class, 'dashboard']);
+        Route::get('userList', [AdminController::class, 'userList']);
+        Route::get('unActivatedList', [AdminController::class, 'unActivatedList']);
+        Route::post('activated', [AdminController::class, 'activated']);
+        Route::get('userApproved/{slug}', [AdminController::class, 'approved']);
+        Route::get('bannedList', [AdminController::class, 'bannedList']);
+        Route::get('user/{slug}', [AdminController::class, 'detail']);
+        Route::get('userBann/{slug}', [AdminController::class, 'deleteView']);
+        Route::get('userBanned/{slug}', [AdminController::class, 'deleted']);
+        Route::get('userRestore/{slug}', [AdminController::class, 'restoreUser']);
+        Route::get('userAdd', [AdminController::class, 'userAdd']);
+        Route::post('userAdd', [AdminController::class, 'userAdded']);
 
-        Route::get('books', [BookController::class, 'index']);
-        Route::get('bookAdd', [BookController::class, 'add']);
-        Route::post('bookAdd', [BookController::class, 'create']);
-        Route::get('bookEdit/{slug}', [BookController::class, 'edit']);
-        Route::post('bookEdit/{slug}', [BookController::class, 'update']);
-        Route::get('bookDelete/{slug}', [BookController::class, 'delete']);
-        Route::get('bookDestroy/{slug}', [BookController::class, 'destroy']);
-        Route::get('bookRestore',[BookController::class, 'deletedBook']);
-        Route::get('bookRestored/{slug}',[BookController::class, 'restore']);
+        Route::get('bookList', [BookController::class, 'bookList']);
+        Route::get('bookAdd', [BookController::class, 'bookAdd']);
+        Route::post('bookAdded', [BookController::class, 'bookAdded']);
+        Route::get('bookUpdate/{slug}', [BookController::class, 'bookUpdate']);
+        Route::post('bookUpdate/{slug}', [BookController::class, 'bookUpdated']);
+        Route::get('bookDelete/{slug}', [BookController::class, 'bookDelete']);
+        Route::get('bookDeleted/{slug}', [BookController::class, 'bookDeleted']);
+        Route::get('bookRestore',[BookController::class, 'listBookDeleted']);
+        Route::get('bookRestored/{slug}',[BookController::class, 'restored']);
         
-        Route::get('categories', [CategoryController::class, 'index']);
-        Route::get('categoryAdd', [CategoryController::class, 'add']);
-        Route::post('categoryAdd', [CategoryController::class, 'store']);
-        Route::get('categoryEdit/{slug}', [CategoryController::class, 'edit']);
-        Route::put('categoryEdit/{slug}', [CategoryController::class, 'update']);
-        Route::get('categoryDelete/{slug}', [CategoryController::class, 'delete']);
-        Route::get('categoryDestroy/{slug}', [CategoryController::class, 'destroy']);
-        Route::get('categoryRestore',[CategoryController::class, 'deletedCategory']);
-        Route::get('categoryRestored/{slug}',[CategoryController::class, 'restore']);
+        Route::get('categoryList', [CategoryController::class, 'categoryList']);
+        Route::get('categoryAdd', [CategoryController::class, 'categoryAdd']);
+        Route::post('categoryAdd', [CategoryController::class, 'categoryAdded']);
+        Route::get('categoryUpdate/{slug}', [CategoryController::class, 'categoryUpdate']);
+        Route::put('categoryUpdate/{slug}', [CategoryController::class, 'categoryUpdated']);
+        Route::get('categoryDelete/{slug}', [CategoryController::class, 'categoryDelete']);
+        Route::get('categoryDeleted/{slug}', [CategoryController::class, 'categoryDeleted']);
+        Route::get('categoryRestore',[CategoryController::class, 'listCategoryDeleted']);
+        Route::get('categoryRestored/{slug}',[CategoryController::class, 'restored']);
         
-        Route::get('users', [UserController::class, 'index']);
-        Route::get('unregistered', [UserController::class, 'registeredUser']);
-        Route::get('user/{slug}', [UserController::class, 'detail']);
-        Route::get('userApproved/{slug}', [UserController::class, 'approved']);
-        Route::get('userBan/{slug}', [UserController::class, 'delete']);
-        Route::get('userBanned/{slug}', [UserController::class, 'destroy']);
-        Route::get('bannedList', [UserController::class, 'banned']);
-        Route::get('userRestore/{slug}', [UserController::class, 'restore']);
+        Route::get('rentList',[RentController::class,'rentList']);
+        Route::post('rentList',[RentController::class,'bookReturn']);
+        Route::get('bookRent',[RentController::class,'bookRentForm']);
+        Route::post('bookRent',[RentController::class,'bookRent']);
         
-        Route::get('bookRent',[BookRentController::class,'index']);
-        Route::post('bookRent',[BookRentController::class,'store']);
-        Route::get('bookReturn',[BookRentController::class,'return']);
-        Route::post('bookReturn',[BookRentController::class,'returnPost']);
-        
-        Route::get('logs', [LogController::class, 'index']);
     });
 });
